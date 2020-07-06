@@ -1,0 +1,21 @@
+ACIA_DATA       = $7F00
+ACIA_STATUS     = $7F01
+ACIA_COMMAND    = $7F02
+ACIA_CONTROL    = $7F03
+
+VIA_ORB         = $7F20
+VIA_ORA         = $7F21
+VIA_DDRB        = $7F22
+VIA_DDRA        = $7F23
+VIA_T1C_L       = $7F24
+VIA_T1C_H       = $7F25
+VIA_T1L_L       = $7F26
+VIA_T1L_H       = $7F27
+VIA_T2C_L       = $7F28
+VIA_T2C_H       = $7F29
+VIA_SR          = $7F2A
+VIA_ACR         = $7F2B
+VIA_PCR         = $7F2C
+VIA_IFR         = $7F2D
+VIA_IER         = $7F2E
+VIA_IRA         = $7F2F
