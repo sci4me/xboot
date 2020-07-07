@@ -2,7 +2,6 @@ SRC_DIR=src
 
 LINK_CONFIG=navi65.cfg
 ROM_BIN=xboot.bin
-MAPFILE=xboot.map
 
 CL65_FLAGS+=--cpu 65C02
 CL65_FLAGS+=-t none
@@ -32,7 +31,7 @@ clean:
 	rm -f $(OBJECTS)
 
 $(ROM_BIN): $(OBJECTS) $(LINK_CONFIG)
-	$(CL65) $(CL65_FLAGS) -m $(MAPFILE) -o "$@" $(OBJECTS)
+	$(CL65) $(CL65_FLAGS) -o "$@" $(OBJECTS)
 
 $(SRC_DIR)/%.o: $(SRC_DIR)/%.s $(LINK_CONFIG)
 	$(CL65) $(CL65_FLAGS) -c -o "$@" "$<"
