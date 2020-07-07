@@ -16,12 +16,15 @@ X_NAK 			= $15
 
 
 .segment "VECTORS"
-.word nmi
+.word _nmi
 .word reset
-.word irq
+.word _irq
 
 
 .zeropage
+nmivec:		.res 2 ; These must be at $00 and $02;
+irqvec:		.res 2 ; downloaded code _may_ change these.
+
 ptr1:  		.res 2
 xdlptr:		.res 2
 blkno: 		.res 1
@@ -31,8 +34,11 @@ bflag: 		.res 1
 crc:		.res 2
 
 .code
-reset: 		jmp start
+_nmi: 		jmp (nmivec)
+_irq:		jmp (irqvec)
+
 nmi:		rti
+reset:		jmp start
 irq:		rti
 
 
@@ -44,12 +50,25 @@ irq:		rti
 @skip:
 .endmacro
 
+.macro set16 addr, val
+	lda #<val
+	sta addr
+	lda #>val
+	sta addr+1
+.endmacro
+
 
 .proc start
 	sei
 	cld
 	ldx #$FF
 	txs
+
+	; NOTE: This is probably dangerous since
+	; NMIs are non-maskable... but, YOLOOOOO.
+	set16 nmivec, nmi
+	set16 irqvec, irq
+
 	cli
 
 
