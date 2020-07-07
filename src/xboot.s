@@ -24,6 +24,8 @@ X_NAK 			= $15
 .zeropage
 nmivec:		.res 2 ; These must be at $00 and $02;
 irqvec:		.res 2 ; downloaded code _may_ change these.
+.assert nmivec = $00, error, "nmivec should be $00"
+.assert irqvec = $02, error, "irqvec should be $02"
 
 ptr1:  		.res 2
 xdlptr:		.res 2
@@ -85,7 +87,6 @@ irq:		rti
 
     jsr xrecv
     bcs run
-
     lda #$0F
     sta VIA_ORA
 cry:
@@ -93,6 +94,12 @@ cry:
 	bra cry
 
 run:
+	; Out of kindness for the downloaded code:
+	sei
+	cld
+	ldx #$FF
+	txs
+
 	jmp (xdlptr)
 .endproc
 

@@ -29,6 +29,7 @@ program: all
 
 clean:
 	rm -f $(OBJECTS)
+	rm -f $(ROM_BIN)
 
 $(ROM_BIN): $(OBJECTS) $(LINK_CONFIG)
 	$(CL65) $(CL65_FLAGS) -o "$@" $(OBJECTS)
