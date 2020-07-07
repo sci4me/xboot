@@ -36,13 +36,6 @@ nmi:		rti
 irq:		rti
 
 
-.macro ld16 addr, val
-	lda #<val
-	sta addr
-	lda #>val
-	sta addr+1
-.endmacro
-
 .macro inc16 addr
 .local @skip
 	inc addr
