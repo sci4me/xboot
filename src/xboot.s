@@ -29,19 +29,12 @@ irqvec:		.res 2 ; downloaded code _may_ change these.
 
 ptr1:  		.res 2
 xdlptr:		.res 2
+startptr:	.res 2
 blkno: 		.res 1
 retry1: 	.res 1
 retry2: 	.res 1
 bflag: 		.res 1
 crc:		.res 2
-
-.code
-_nmi: 		jmp (nmivec)
-_irq:		jmp (irqvec)
-
-nmi:		rti
-reset:		jmp start
-irq:		rti
 
 
 .macro inc16 addr
@@ -60,6 +53,15 @@ irq:		rti
 .endmacro
 
 
+.code
+_nmi: 		jmp (nmivec)
+_irq:		jmp (irqvec)
+
+nmi:		rti
+reset:		jmp start
+irq:		rti
+
+
 .proc start
 	sei
 	cld
@@ -74,11 +76,6 @@ irq:		rti
 	cli
 
 
-	lda #$0F
-	sta VIA_DDRA
-	stz VIA_ORA
-
-
 	lda #%00001011
     sta ACIA_COMMAND
     lda #%00011111
@@ -87,8 +84,6 @@ irq:		rti
 
     jsr xrecv
     bcs run
-    lda #$0F
-    sta VIA_ORA
 cry:
 	wai
 	bra cry
@@ -100,7 +95,7 @@ run:
 	ldx #$FF
 	txs
 
-	jmp (xdlptr)
+	jmp (startptr)
 .endproc
 
 
@@ -183,6 +178,12 @@ goodcrc:	ldx #2
 			lda XPACKET_BUF,x
 			sta xdlptr+1
 			sta ptr1+1
+			inx
+			lda XPACKET_BUF,x
+			sta startptr
+			inx
+			lda XPACKET_BUF,x
+			sta startptr+1
 			inx
 			dec bflag
 
